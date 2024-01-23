@@ -27,7 +27,7 @@ export function GetReleaseLastRecord(id: string): Promise<RespBody> {
 }
 
 export function BuildImage(data: any): Promise<RespBody> {
-  return request.post("/api/image", data);
+  return request.post("/api/my/image", data);
 }
 
 export function ApplyRelease(data: any): Promise<RespBody> {
@@ -42,7 +42,10 @@ export function UpdateReleaseImage(id: string, data: any): Promise<RespBody> {
   return request.put("/api/release/" + id + "/image", data);
 }
 
-export function UpdateReleaseReplicas(id: string, data: any): Promise<RespBody> {
+export function UpdateReleaseReplicas(
+  id: string,
+  data: any
+): Promise<RespBody> {
   return request.put("/api/release/" + id + "/replica_count", data);
 }
 
