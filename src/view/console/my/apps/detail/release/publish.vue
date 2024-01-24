@@ -10,7 +10,7 @@
           <my-env-selector v-model="formData.env_id" />
         </t-form-item>
         <t-form-item name="DomainId" label="Domain">
-          <my-domain-selector v-model="formData.domain_id" />
+          <my-domain-selector v-model="formData.domain_id" :envId="formData.env_id" />
         </t-form-item>
         <t-form-item name="ImageId" label="Image">
           <my-image-selector v-if="appId || release?.app_id" v-model="formData.image_id" :appId="appId || release?.app_id || ''" />
@@ -132,15 +132,15 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import { ApplyRelease } from "@/api/team";
-import { GetMyReleases } from "@/api/my";
+import { ApplyRelease } from "@/api/my";
+import { GetMyAppReleases } from "@/api/my";
 import { PlusIcon, DeleteIcon } from "tdesign-icons-vue-next";
 import { PublishObject, Release } from "@/type/types";
 
 const props = defineProps({
-  appId: String || undefined,
-  envId: String || undefined,
-  releaseId: String || undefined,
+  appId: String || "",
+  envId: String || "",
+  releaseId: String || "",
 });
 
 const visible = ref(false);
@@ -161,7 +161,7 @@ const handleShow = () => {
 
 const release = ref<Release>();
 function requestRelease(releaseId: string) {
-  GetMyReleases({ id: releaseId }).then((resp) => {
+  GetMyAppReleases(props.appId as string, { id: releaseId }).then((resp) => {
     if (resp.code === 0) {
       release.value = resp.data?.list[0];
       if (formData.value && release.value) {

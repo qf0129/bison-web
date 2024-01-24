@@ -29,7 +29,7 @@ const requestList = (search: string) => {
     return;
   }
   loading.value = true;
-  GetMyAppImages(props.appId, { "tag:ct": search, status: "success" })
+  GetMyAppImages(props.appId, { "tag:ct": search, status: "success", "ctime:ob": "desc" })
     .then((resp) => {
       options.value = [];
       if (resp.code === 0) {

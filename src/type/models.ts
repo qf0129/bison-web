@@ -135,5 +135,18 @@ const models: { [key: string]: Model } = {
       name: commonNameRule,
     },
   },
+  domain: {
+    name: "domain",
+    title: "Domain",
+    columns: [
+      { key: "id", title: "ID", type: "string", show: false, edit: false },
+      { key: "content", title: "Content", type: "string" },
+      { key: "desc", title: "Desc", type: "string" },
+      { key: "ctime", title: "CreateTime", type: "string", ellipsis: true, edit: false },
+    ],
+    rules: {
+      content: commonNameRule,
+    },
+  },
 };
 export default models;

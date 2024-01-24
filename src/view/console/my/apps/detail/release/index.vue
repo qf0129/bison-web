@@ -29,7 +29,7 @@
             :theme="row.deployment_status.availableReplicas === row.deployment_status.replicas ? 'success' : 'warning'"
             variant="light"
           >
-            {{ row.deployment_status.availableReplicas }} / {{ row.deployment_status.replicas }}
+            {{ row.deployment_status.availableReplicas || 0 }} / {{ row.deployment_status.replicas }}
           </t-tag>
           <t-tooltip v-if="row.err_msg" :content="row.err_msg" theme="light">
             <ErrorCircleIcon color="red" />
@@ -73,14 +73,14 @@ const releases = ref<Array<Release>>([]);
 const loadingList = ref(false);
 const requestData = () => {
   loadingList.value = true;
-  var filters: any = { "ctime:ob": "desc" };
+  var params: any = { "ctime:ob": "desc", preload: "app,creator,image,env", page_size: 100 };
   if (selectedEnvId.value) {
-    filters.env_id = selectedEnvId.value;
+    params.env_id = selectedEnvId.value;
   }
-  GetMyAppReleases(appId, filters)
+  GetMyAppReleases(appId, params)
     .then((resp) => {
       if (resp.code === 0) {
-        releases.value = resp.data || [];
+        releases.value = resp.data?.list || [];
       }
     })
     .finally(() => {

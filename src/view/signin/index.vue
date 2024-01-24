@@ -10,7 +10,7 @@
             <h2 style="margin: 10px 0">SignIn</h2>
           </t-row>
           <t-input v-model="username" placeholder="Username" />
-          <t-input v-model="password" placeholder="Password" />
+          <t-input v-model="password" placeholder="Password" type="password" />
           <t-button size="large" @click="submit">SingIn</t-button>
         </t-space>
       </m-card>
@@ -74,6 +74,7 @@ function submit() {
 
     .t-button {
       width: 100%;
+      margin-top: 30px;
     }
   }
 }

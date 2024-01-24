@@ -72,14 +72,15 @@
 import { ref, onMounted } from "vue";
 import { Release, App } from "@/type/types";
 import { useRoute } from "vue-router";
-import { GetMyReleases, GetMyApps } from "@/api/my";
-import { OfflineRelease } from "@/api/team";
+import { GetMyAppReleases, GetMyApps } from "@/api/my";
+import { OfflineRelease } from "@/api/my";
 import { MessagePlugin } from "tdesign-vue-next";
 import Pods from "./pods.vue";
 import Publish from "../publish.vue";
 
 const route = useRoute();
-const releaseId = route.params.releaseId;
+const appId = route.params.appId as string;
+const releaseId = route.params.releaseId as string;
 
 onMounted(() => {
   requestRelease();
@@ -88,7 +89,7 @@ onMounted(() => {
 const release = ref<Release>();
 const app = ref<App>();
 function requestRelease() {
-  GetMyReleases({ id: releaseId, preload: "image,domain,env" }).then((resp) => {
+  GetMyAppReleases(appId, { id: releaseId, preload: "image,domain,env", page_size: 1 }).then((resp) => {
     if (resp.code === 0) {
       release.value = resp.data?.list[0] || {};
       if (release.value?.app_id) {
