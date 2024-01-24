@@ -1,30 +1,17 @@
 <template>
-  <div style="padding: 10px">
-    <t-row style="padding: 10px 0">
-      <t-col flex="1" justify="center">
-        <t-space>
-          <BuildBtn :appId="appId" @onSubmit="onSubmit" />
-        </t-space>
-      </t-col>
-      <t-col>
-        <t-button theme="default" @click="requestData" variant="text">
+  <m-card title="Images" padded bodyHeight="240px">
+    <template #action>
+      <t-space>
+        <BuildBtn :appId="appId" @onSubmit="onSubmit" />
+        <t-button theme="default" @click="requestData">
           <template #icon>
             <RefreshIcon />
           </template>
         </t-button>
-      </t-col>
-    </t-row>
-    <t-table
-      row-key="id"
-      :data="items"
-      :columns="columns"
-      size="small"
-      :pagination="{ defaultCurrent: 1, defaultPageSize: pageSize, total }"
-      @page-change="onPageChange"
-      :loading="loading"
-    >
-    </t-table>
-  </div>
+      </t-space>
+    </template>
+    <t-table hover row-key="id" :data="items" :columns="columns" size="small" @page-change="onPageChange" :loading="loading"> </t-table>
+  </m-card>
 </template>
 
 <script setup lang="ts">
@@ -36,13 +23,13 @@ import BuildBtn from "./build.vue";
 import { RefreshIcon } from "tdesign-icons-vue-next";
 
 const route = useRoute();
-const appId = route.params.appId || "";
+const appId = route.params.appId as string;
 
 const columns = ref([
-  { colKey: "tag", title: "Version", width: 300, ellipsis: true },
-  { colKey: "repo_branch", title: "RepoBranch" },
+  { colKey: "tag", title: "Version", width: 180, ellipsis: true },
+  { colKey: "repo_branch", title: "Branch" },
   { colKey: "desc", title: "Desc", ellipsis: true },
-  { colKey: "build_time", title: "BuildSeconds" },
+  { colKey: "build_time", title: "UseSeconds", width: 100 },
   { colKey: "status", title: "Status" },
   { colKey: "err_msg", title: "ErrMsg", width: 200, ellipsis: true },
   { colKey: "ctime", title: "Ctime", width: 250, ellipsis: true },

@@ -1,24 +1,26 @@
 <template>
-  <div style="padding: 10px">
-    <t-row style="padding: 10px 0">
-      <t-col flex="1">
-        <t-space>
-          <t-space align="center">
-            <!-- <span>Env:</span> -->
-            <my-env-radio v-model="selectedEnvId" @change="refresh" />
-            <Publish :appId="appId" :envId="selectedEnvId" @onSubmit="onPublish" />
-          </t-space>
-        </t-space>
-      </t-col>
-      <t-col>
-        <t-button theme="default" @click="refresh" variant="text">
+  <m-card title="Releases" padded>
+    <template #action>
+      <t-space>
+        <my-env-radio v-model="selectedEnvId" @change="refresh" />
+        <Publish :appId="appId" :envId="selectedEnvId" @onSubmit="onPublish" />
+        <t-button theme="default" @click="refresh">
           <template #icon>
             <RefreshIcon />
           </template>
         </t-button>
-      </t-col>
-    </t-row>
-    <t-table v-if="releases.length" row-key="id" :data="releases" :columns="columns" :selectOnRowClick="true" @onRowClick="onRowClick" :loading="loadingList">
+      </t-space>
+    </template>
+    <t-table
+      v-if="releases.length"
+      row-key="id"
+      hover
+      :data="releases"
+      :columns="columns"
+      :selectOnRowClick="true"
+      @onRowClick="onRowClick"
+      :loading="loadingList"
+    >
       <template #operation="{ row }">
         <t-button theme="primary" variant="text" @click="clickRelease(row)">View</t-button>
       </template>
@@ -42,7 +44,7 @@
             <Item v-if="releases.length" v-for="srv in releases" :release="srv" />
             <m-empty v-else @refresh="requestData" />
         </t-skeleton> -->
-  </div>
+  </m-card>
 </template>
 
 <script setup lang="ts">

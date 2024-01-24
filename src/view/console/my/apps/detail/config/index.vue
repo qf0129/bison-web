@@ -1,20 +1,16 @@
 <template>
-  <div style="padding: 10px">
-    <t-row style="padding: 10px 0">
-      <t-col flex="1" justify="center">
-        <t-space>
-          <my-env-radio @change="onChangeEnv" noAll @onLoadData="onLoadEnv" />
-          <CreateBtn :appId="appId" @onSubmit="onSubmit" />
-        </t-space>
-      </t-col>
-      <t-col>
-        <t-button theme="default" @click="requestData" variant="text">
+  <m-card title="Configs" padded>
+    <template #action>
+      <t-space>
+        <my-env-radio @change="onChangeEnv" noAll @onLoadData="onLoadEnv" />
+        <CreateBtn :appId="appId" @onSubmit="onSubmit" />
+        <t-button theme="default" @click="requestData">
           <template #icon>
             <RefreshIcon />
           </template>
         </t-button>
-      </t-col>
-    </t-row>
+      </t-space>
+    </template>
     <t-table
       row-key="id"
       :data="items"
@@ -62,7 +58,7 @@
         </t-popconfirm>
       </template>
     </t-table>
-  </div>
+  </m-card>
 </template>
 <script setup lang="ts">
 import { Config } from "@/type/types";
