@@ -1,5 +1,5 @@
 <template>
-  <t-button theme="primary" @click="visible = true">Add</t-button>
+  <t-button theme="primary" @click="show">AddConfig</t-button>
   <t-dialog v-model:visible="visible" header="AddConfig" width="60%" :on-close="onClose" :on-confirm="onConfirm">
     <t-table :data="configs" :columns="columns" row-key="id" bordered size="small">
       <template #custom_key="{ row }">
@@ -81,7 +81,11 @@ const onClose = () => {
 const reset = () => {
   configs.value = [{ key: "", value: "", type: "text", desc: "" }];
 };
+const show = () => {
+  visible.value = true;
+};
 onMounted(() => {
   reset();
 });
+defineExpose({ show });
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <t-button theme="primary" @click="visible = true">Build</t-button>
+  <t-button theme="primary" @click="show">BuildImage</t-button>
   <t-dialog v-model:visible="visible" header="Build" width="40%" :on-close="close" :on-confirm="onConfirmAnother">
     <t-form labelAlign="top">
       <t-form-item label="Branch">
@@ -9,10 +9,6 @@
         <t-textarea v-model="form.desc" placeholder="Description of this revision" />
       </t-form-item>
     </t-form>
-    <!-- <t-space direction="vertical" style="width: 100%">
-            <t-input v-model="form.branch" plplaceholder="Branch" label="Branch" />
-            <t-textarea v-model="form.desc" placeholder="Update content ..." label="Update content" />
-        </t-space> -->
   </t-dialog>
 </template>
 <script setup lang="ts">
@@ -43,4 +39,8 @@ const onConfirmAnother = () => {
   });
 };
 const close = () => {};
+const show = () => {
+  visible.value = true;
+};
+defineExpose({ show });
 </script>

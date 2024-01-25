@@ -1,16 +1,12 @@
 <template>
-  <m-card title="Images" padded bodyHeight="240px">
+  <m-card title="Images" padded bodyHeight="240px" refreshBtn @refresh="requestData">
     <template #action>
       <t-space>
-        <BuildBtn :appId="appId" @onSubmit="onSubmit" />
-        <t-button theme="default" @click="requestData">
-          <template #icon>
-            <RefreshIcon />
-          </template>
-        </t-button>
+        <BuildBtn :appId="appId" @onSubmit="onSubmit" ref="buildBtn" />
       </t-space>
     </template>
-    <t-table hover row-key="id" :data="items" :columns="columns" size="small" @page-change="onPageChange" :loading="loading"> </t-table>
+    <t-table v-if="items.length" hover row-key="id" :data="items" :columns="columns" size="small" @page-change="onPageChange" :loading="loading"> </t-table>
+    <m-empty v-else @create="buildBtn.show()" hideText createBtnText="Build Image" />
   </m-card>
 </template>
 
@@ -20,10 +16,10 @@ import { useRoute } from "vue-router";
 import { ref, onMounted } from "vue";
 import { GetMyAppImages } from "@/api/my";
 import BuildBtn from "./build.vue";
-import { RefreshIcon } from "tdesign-icons-vue-next";
 
 const route = useRoute();
 const appId = route.params.appId as string;
+const buildBtn = ref();
 
 const columns = ref([
   { colKey: "tag", title: "Version", width: 180, ellipsis: true },
@@ -36,7 +32,7 @@ const columns = ref([
 ]);
 
 const pageNum = ref(1);
-const pageSize = ref(10);
+const pageSize = ref(5);
 const total = ref(0);
 
 const items = ref<Array<Image>>([]);

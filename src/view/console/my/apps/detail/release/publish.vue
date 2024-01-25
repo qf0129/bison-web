@@ -1,10 +1,11 @@
 <template>
   <div>
-    <t-button @click="handleShow" theme="primary">
+    <t-button @click="show" theme="primary">
       <template v-if="releaseId">Update</template>
-      <template v-else>Publish</template>
+      <template v-else>PublishApp</template>
     </t-button>
-    <t-drawer v-model:visible="visible" header="Publish App" size="large" confirmBtn="Submit" @confirm="submitForm" @close="onClose" :destroyOnClose="true">
+    <t-dialog v-model:visible="visible" header="Publish App" width="60%" :on-close="onClose" :on-confirm="submitForm">
+      <!-- <t-drawer v-model:visible="visible" header="Publish App" size="large" confirmBtn="Submit" @confirm="submitForm" @close="onClose" :destroyOnClose="true"> -->
       <t-form v-if="formData" ref="form" :data="formData" labelWidth="150px">
         <t-form-item name="EnvId" label="Env">
           <my-env-selector v-model="formData.env_id" />
@@ -126,7 +127,7 @@
       <!-- <t-row style="margin-top: 50px;text-align: center;">
                 <t-button theme="primary" type="submit" @click="submitForm">Submit</t-button>
             </t-row> -->
-    </t-drawer>
+    </t-dialog>
   </div>
 </template>
 
@@ -146,7 +147,7 @@ const props = defineProps({
 const visible = ref(false);
 const formData = ref<PublishObject>();
 
-const handleShow = () => {
+const show = () => {
   visible.value = true;
   if (props.releaseId) {
     requestRelease(props.releaseId);
@@ -295,4 +296,6 @@ onMounted(() => {
 const onClose = () => {
   resetForm();
 };
+
+defineExpose({ show });
 </script>

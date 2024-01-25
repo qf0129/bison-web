@@ -1,17 +1,14 @@
 <template>
-  <m-card title="Configs" padded>
+  <m-card title="Configs" padded refreshBtn @refresh="requestData" toggleBody>
     <template #action>
       <t-space>
         <my-env-radio @change="onChangeEnv" noAll @onLoadData="onLoadEnv" />
-        <CreateBtn :appId="appId" @onSubmit="onSubmit" />
-        <t-button theme="default" @click="requestData">
-          <template #icon>
-            <RefreshIcon />
-          </template>
-        </t-button>
+        <CreateBtn :appId="appId" @onSubmit="onSubmit" ref="createBtn" />
       </t-space>
     </template>
+
     <t-table
+      v-if="items.length"
       row-key="id"
       :data="items"
       :columns="columns"
@@ -58,6 +55,7 @@
         </t-popconfirm>
       </template>
     </t-table>
+    <m-empty v-else hideText createBtnText="Add Config" @create="createBtn.show()" />
   </m-card>
 </template>
 <script setup lang="ts">
@@ -66,12 +64,13 @@ import { useRoute } from "vue-router";
 import { ref, onMounted } from "vue";
 import { GetMyAppConfigs, UpdateConfigDesc, UpdateConfigValue, DeleteConfig } from "@/api/my";
 import CreateBtn from "./create.vue";
-import { RefreshIcon, EditIcon, DeleteIcon } from "tdesign-icons-vue-next";
+import { EditIcon, DeleteIcon } from "tdesign-icons-vue-next";
 import { MessagePlugin } from "tdesign-vue-next";
 
 const route = useRoute();
 const appId = route.params.appId || "";
 const selectedEnvId = ref("");
+const createBtn = ref();
 
 const columns = ref([
   { colKey: "key", title: "Key", width: 300 },

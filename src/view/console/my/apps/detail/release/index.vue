@@ -1,14 +1,9 @@
 <template>
-  <m-card title="Releases" padded>
+  <m-card title="Releases" padded refreshBtn @refresh="refresh" toggleBody>
     <template #action>
       <t-space>
         <my-env-radio v-model="selectedEnvId" @change="refresh" />
-        <Publish :appId="appId" :envId="selectedEnvId" @onSubmit="onPublish" />
-        <t-button theme="default" @click="refresh">
-          <template #icon>
-            <RefreshIcon />
-          </template>
-        </t-button>
+        <PublishBtn :appId="appId" :envId="selectedEnvId" @onSubmit="onPublish" ref="publishBtn" />
       </t-space>
     </template>
     <t-table
@@ -39,11 +34,7 @@
         </t-space>
       </template>
     </t-table>
-    <m-empty v-else @refresh="refresh" />
-    <!-- <t-skeleton :loading="loadingList">
-            <Item v-if="releases.length" v-for="srv in releases" :release="srv" />
-            <m-empty v-else @refresh="requestData" />
-        </t-skeleton> -->
+    <m-empty v-else @create="publishBtn.show()" hideText createBtnText="Publish App" />
   </m-card>
 </template>
 
@@ -52,18 +43,18 @@ import { Release, DeploymentStatus } from "@/type/types";
 import { useRoute } from "vue-router";
 import { ref, onMounted } from "vue";
 import { GetMyAppReleases, GetMyAppReleasesStatus } from "@/api/my";
-// import Item from './item.vue';
-import { RefreshIcon, ErrorCircleIcon } from "tdesign-icons-vue-next";
-import Publish from "./publish.vue";
+import { ErrorCircleIcon } from "tdesign-icons-vue-next";
+import PublishBtn from "./publish.vue";
 import router from "@/router";
 
 const route = useRoute();
 const appId = route.params.appId as string;
 const selectedEnvId = ref("");
+const publishBtn = ref();
 
 const columns = ref([
-  { colKey: "name", title: "ReleaseName", width: 300 },
   { colKey: "env.title", title: "Env" },
+  { colKey: "name", title: "ReleaseName", width: 300 },
   { colKey: "image.repo_branch", title: "RepoBranch" },
   { colKey: "ctime", title: "Ctime", width: 300 },
   { colKey: "creator.username", title: "Creator" },
