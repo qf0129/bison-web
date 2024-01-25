@@ -116,7 +116,7 @@ function requestPods() {
         pods.value = resp.data.items || [];
         if (pods.value.length && !currentLogsTab.value) {
           currentLogsTab.value = pods.value[0].metadata.name;
-          if (pods.value[0].status.phase === "") {
+          if (pods.value[0].status.phase === "Running") {
             requestLogs();
           }
         }

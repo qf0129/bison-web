@@ -4,25 +4,25 @@
       <template v-if="releaseId">Update</template>
       <template v-else>PublishApp</template>
     </t-button>
-    <t-dialog v-model:visible="visible" header="Publish App" width="60%" :on-close="onClose" :on-confirm="submitForm">
+    <t-dialog v-model:visible="visible" header="Publish App" width="60%" style="max-height: 500px" :on-close="onClose" :on-confirm="submitForm">
       <!-- <t-drawer v-model:visible="visible" header="Publish App" size="large" confirmBtn="Submit" @confirm="submitForm" @close="onClose" :destroyOnClose="true"> -->
       <t-form v-if="formData" ref="form" :data="formData" labelWidth="150px">
         <t-form-item name="EnvId" label="Env">
           <my-env-selector v-model="formData.env_id" />
         </t-form-item>
-        <t-form-item name="DomainId" label="Domain">
-          <my-domain-selector v-model="formData.domain_id" :envId="formData.env_id" />
-        </t-form-item>
         <t-form-item name="ImageId" label="Image">
           <my-image-selector v-if="appId || release?.app_id" v-model="formData.image_id" :appId="appId || release?.app_id || ''" />
         </t-form-item>
+        <t-form-item name="DomainId" label="DomainSuffix">
+          <my-domain-selector v-model="formData.domain_id" :envId="formData.env_id" />
+        </t-form-item>
         <t-form-item name="ReplicaCount" label="ReplicaCount">
-          <t-input-number v-model="formData.replica_count" />
+          <t-input-number v-model="formData.replica_count" min="1" />
         </t-form-item>
         <t-form-item name="ConfigMode" label="ConfigMode">
           <t-space>
             <t-radio-group v-model="formData.config_mode">
-              <t-radio-button value="" label="NotUse" />
+              <t-radio-button value="" label="None" />
               <t-radio-button value="env" label="Env" />
               <t-radio-button value="json" label="JSON" />
             </t-radio-group>
@@ -39,8 +39,8 @@
             <t-tag-input v-model="formData.container.args" clearable />
           </t-form-item>
           <t-form-item name="env" label="Env">
-            <div style="width: 100%">
-              <div v-for="(item, i) in formData.container.env" style="margin-bottom: 10px">
+            <t-space style="width: 100%" direction="vertical" align="start" size="2px">
+              <div v-for="(item, i) in formData.container.env">
                 <t-input-group style="width: 100%">
                   <t-input v-model="item.name" placeholder="Key" style="width: 40%" />
                   <t-input v-model="item.value" placeholder="Value" />
@@ -49,16 +49,16 @@
                   </t-button>
                 </t-input-group>
               </div>
-              <div>
+              <t-row>
                 <t-button @click="addEnv" theme="default" size="small">
                   <template #icon> <PlusIcon /> </template>Add
                 </t-button>
-              </div>
-            </div>
+              </t-row>
+            </t-space>
           </t-form-item>
-          <t-form-item name="port" label="Port">
-            <div style="width: 100%">
-              <div v-for="(item, i) in formData.container.ports" style="margin-bottom: 10px">
+          <t-form-item name="port" label="ContainerPort">
+            <t-space style="width: 100%" direction="vertical" align="start" size="2px">
+              <div v-for="(item, i) in formData.container.ports">
                 <t-input-group style="width: 100%">
                   <t-select v-model="item.protocol" style="width: 100px">
                     <t-option key="tcp" value="tcp" label="TCP" />
@@ -70,16 +70,16 @@
                   </t-button>
                 </t-input-group>
               </div>
-              <div>
+              <t-row>
                 <t-button @click="addPort" theme="default" size="small">
                   <template #icon> <PlusIcon /> </template>Add
                 </t-button>
-              </div>
-            </div>
+              </t-row>
+            </t-space>
           </t-form-item>
           <t-form-item name="servicePort" label="ServicePort">
-            <div style="width: 100%">
-              <div v-for="(item, i) in formData.service_spec.ports" style="margin-bottom: 10px">
+            <t-space style="width: 100%" direction="vertical" align="start" size="2px">
+              <div v-for="(item, i) in formData.service_spec.ports">
                 <t-input-group style="width: 100%">
                   <t-select v-model="item.protocol" style="width: 100px">
                     <t-option key="tcp" value="tcp" label="TCP" />
@@ -92,12 +92,12 @@
                   </t-button>
                 </t-input-group>
               </div>
-              <div>
+              <t-row>
                 <t-button @click="addServicePort" theme="default" size="small">
                   <template #icon> <PlusIcon /> </template>Add
                 </t-button>
-              </div>
-            </div>
+              </t-row>
+            </t-space>
           </t-form-item>
           <t-form-item name="livenessProbe" label="Liveness">
             <t-checkbox @change="toggleLiveness" :defaultChecked="formData?.container?.livenessProbe != null" />
@@ -216,7 +216,7 @@ const delEnv = (index: number) => {
 
 const addPort = () => {
   if (formData.value) {
-    formData.value.container.ports.push({ protocol: "tcp", containerPort: 80 });
+    formData.value.container.ports.push({ protocol: "tcp", containerPort: 8080 });
   }
 };
 
@@ -228,7 +228,7 @@ const delPort = (index: number) => {
 
 const addServicePort = () => {
   if (formData.value) {
-    formData.value.service_spec.ports.push({ protocol: "tcp", port: 80, targetPort: 80 });
+    formData.value.service_spec.ports.push({ protocol: "tcp", port: 80, targetPort: 8080 });
   }
 };
 

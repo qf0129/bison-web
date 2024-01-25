@@ -1,5 +1,5 @@
 <template>
-  <m-card title="Configs" padded refreshBtn @refresh="requestData" toggleBody>
+  <m-card title="Configs" padded refreshBtn @refresh="requestData" toggleBody :toggleBodyDefault="false">
     <template #action>
       <t-space>
         <my-env-radio @change="onChangeEnv" noAll @onLoadData="onLoadEnv" />

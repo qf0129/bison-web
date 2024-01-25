@@ -15,11 +15,6 @@
             <t-popconfirm theme="danger" content="ConfirmOffline?" @confirm="offlineRequest" placement="left">
               <t-button variant="outline" theme="danger">Offline</t-button>
             </t-popconfirm>
-            <!-- <t-button variant="text" theme="default" @click="requestRelease">
-                                <template #icon>
-                                    <RefreshIcon />
-                                </template>
-                            </t-button> -->
           </t-space>
         </div>
       </template>

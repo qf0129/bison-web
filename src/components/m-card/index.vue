@@ -43,7 +43,7 @@
 import { RefreshIcon, BrowseOffIcon, BrowseIcon } from "tdesign-icons-vue-next";
 import { ref } from "vue";
 
-defineProps({
+const props = defineProps({
   title: { type: String },
   topTitle: { type: String },
   shadow: { type: Boolean, default: false },
@@ -55,10 +55,11 @@ defineProps({
   transparent: { type: Boolean, default: false },
   hover: { type: Boolean, default: false },
   toggleBody: { type: Boolean, default: false },
+  toggleBodyDefault: { type: Boolean, default: true },
   toggleBodyText: { type: String, default: "Show" },
 });
 const emits = defineEmits(["refresh"]);
-const showBody = ref(true);
+const showBody = ref(props.toggleBodyDefault);
 
 const onRefresh = () => {
   emits("refresh");
@@ -144,9 +145,9 @@ const onRefresh = () => {
   }
   .titleRightBtn {
     color: #aaa;
-    height: 24px;
-    width: 24px;
-    border-radius: 12px;
+    // height: 24px;
+    // width: 24px;
+    // border-radius: 12px;
 
     svg {
       width: 14px;
