@@ -11,6 +11,15 @@
   --m-menu-width: 100px;
 }
 
+html,
+body {
+  height: 100%;
+  overflow: auto;
+  margin: 0;
+}
+html {
+  overflow-y: auto;
+}
 body {
   margin: 0;
   background-color: #f4f4f4;
@@ -18,13 +27,13 @@ body {
   background-image: linear-gradient(0deg, transparent 24%, var(--color) 25%, var(--color) 26%, transparent 27%,transparent 74%, var(--color) 75%, var(--color) 76%, transparent 77%,transparent),
       linear-gradient(90deg, transparent 24%, var(--color) 25%, var(--color) 26%, transparent 27%,transparent 74%, var(--color) 75%, var(--color) 76%, transparent 77%,transparent);
   background-size: 20px 20px; */
-
 }
-html, body {
-  height: 100%;
-  overflow: auto;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   margin: 0;
-}
-html{
-  overflow-y: auto;
+  padding: 0;
 }

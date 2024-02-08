@@ -1,21 +1,24 @@
 <template>
   <router-view v-if="route.meta.hideParentView" />
-  <m-container v-else :routes="[{ text: 'MyApps', name: 'my_apps_list' }, { text: app?.name }]">
-    <t-row :gutter="[10, 10]">
-      <t-col :span="4">
-        <Info :app="app" />
-      </t-col>
-      <t-col :span="8">
-        <Image />
-      </t-col>
-      <t-col :span="12">
-        <Release />
-      </t-col>
-      <t-col :span="12">
-        <Config />
-      </t-col>
-    </t-row>
-  </m-container>
+  <div v-else>
+    <AppHeader :app="app" />
+    <m-container :padded="false">
+      <t-row :gutter="[10, 10]">
+        <t-col :span="4">
+          <Info :app="app" />
+        </t-col>
+        <t-col :span="8">
+          <Image />
+        </t-col>
+        <t-col :span="12">
+          <Release />
+        </t-col>
+        <t-col :span="12">
+          <Config />
+        </t-col>
+      </t-row>
+    </m-container>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -24,6 +27,7 @@ import { ref, onMounted } from "vue";
 import { App } from "@/type/types";
 import { useRoute } from "vue-router";
 import Info from "./info/index.vue";
+import AppHeader from "./info/header.vue";
 import Image from "./image/index.vue";
 import Release from "./release/index.vue";
 import Config from "./config/index.vue";

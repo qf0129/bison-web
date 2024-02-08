@@ -4,10 +4,8 @@
   </div>
 </template>
 
-
 <style lang="less">
 .layoutContent {
   margin: auto;
-  max-width: 1600px;
 }
 </style>
