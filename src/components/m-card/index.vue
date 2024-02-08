@@ -15,7 +15,15 @@
       <div class="m-card-header" v-if="title">
         <t-space class="m-card-title" v-if="title" align="center" size="3px">
           <span>{{ title }}</span>
-          <t-button v-if="showBody && refreshBtn" @click="onRefresh" class="titleRightBtn" theme="default" variant="text" shape="circle">
+          <t-button
+            v-if="showBody && refreshBtn"
+            :loading="refreshBtnLoading"
+            @click="onRefresh"
+            class="titleRightBtn"
+            theme="default"
+            variant="text"
+            shape="circle"
+          >
             <template #icon><RefreshIcon /></template>
           </t-button>
           <t-button v-if="toggleBody && showBody" @click="showBody = false" class="titleRightBtn" theme="default" variant="text" shape="circle">
@@ -50,6 +58,7 @@ const props = defineProps({
   padded: { type: Boolean, default: false },
   bordered: { type: Boolean, default: false },
   refreshBtn: { type: Boolean, default: false },
+  refreshBtnLoading: { type: Boolean, default: false },
   minHeight: { type: String, default: "" },
   bodyHeight: { type: String, default: "" },
   transparent: { type: Boolean, default: false },

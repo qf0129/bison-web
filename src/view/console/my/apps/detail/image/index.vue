@@ -1,11 +1,11 @@
 <template>
-  <m-card title="Images" padded bodyHeight="240px" refreshBtn @refresh="requestData">
+  <m-card title="Images" padded bodyHeight="240px" refreshBtn :refreshBtnLoading="loading" @refresh="requestData">
     <template #action>
       <t-space>
         <BuildBtn :appId="appId" @onSubmit="onSubmit" ref="buildBtn" />
       </t-space>
     </template>
-    <t-table v-if="items.length" hover row-key="id" :data="items" :columns="columns" size="small" @page-change="onPageChange" :loading="loading"> </t-table>
+    <t-table v-if="items.length" hover row-key="id" :data="items" :columns="columns" size="small" @page-change="onPageChange"> </t-table>
     <m-empty v-else @create="buildBtn.show()" hideText createBtnText="Build Image" />
   </m-card>
 </template>
@@ -57,9 +57,11 @@ const onSubmit = () => {
 const onPageChange = () => {
   requestData();
 };
-
 onMounted(() => {
   requestData();
+  setInterval(() => {
+    requestData();
+  }, 3000);
 });
 </script>
 

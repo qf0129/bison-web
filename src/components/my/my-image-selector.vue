@@ -4,6 +4,7 @@
     filterable
     placeholder="Select image"
     :on-search="requestList"
+    @focus="requestList('')"
     :loading="loading"
     :options="options"
     style="width: 200px; display: inline-block; margin: 0 20px 20px 0"
@@ -11,7 +12,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import { GetMyAppImages } from "@/api/my";
 
 const props = defineProps({
@@ -45,7 +46,4 @@ const requestList = (search: string) => {
       loading.value = false;
     });
 };
-onMounted(() => {
-  requestList("");
-});
 </script>

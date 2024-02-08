@@ -1,0 +1,8 @@
+{
+  "prettier.printWidth": 160, // 最大换行长度
+  "prettier.tabWidth": 2, // 保存后缩进单位
+  "[html][css][less][scss][javascript][typescript][json][jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode", //设置prettier为默认格式化程序
+    "editor.tabSize": 2 // 编辑时缩进单位
+  }
+}

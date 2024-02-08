@@ -1,5 +1,5 @@
 <template>
-  <t-radio-group v-model="current" variant="filled" @change="onChange">
+  <t-radio-group v-model="current" variant="default-filled" @change="onChange">
     <t-radio-button :value="item.id" v-for="item in items">{{ item.title || item.name }}</t-radio-button>
   </t-radio-group>
 </template>

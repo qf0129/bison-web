@@ -1,21 +1,12 @@
 <template>
-  <m-card title="Releases" padded refreshBtn @refresh="refresh" toggleBody>
+  <m-card title="Releases" padded refreshBtn @refresh="refresh" :refreshBtnLoading="loadingList" toggleBody>
     <template #action>
       <t-space>
         <my-env-radio v-model="selectedEnvId" @change="refresh" />
         <PublishBtn :appId="appId" :envId="selectedEnvId" @onSubmit="onPublish" ref="publishBtn" />
       </t-space>
     </template>
-    <t-table
-      v-if="releases.length"
-      row-key="id"
-      hover
-      :data="releases"
-      :columns="columns"
-      :selectOnRowClick="true"
-      @onRowClick="onRowClick"
-      :loading="loadingList"
-    >
+    <t-table v-if="releases.length" row-key="id" hover :data="releases" :columns="columns" :selectOnRowClick="true" @onRowClick="onRowClick">
       <template #operation="{ row }">
         <t-button theme="primary" variant="text" @click="clickRelease(row)">View</t-button>
       </template>
@@ -123,9 +114,11 @@ const clickRelease = (release: Release) => {
 const onRowClick = ({ row }: { row: any }) => {
   router.push({ name: "release_detail", params: { releaseId: row.id } });
 };
-
 onMounted(() => {
   refresh();
+  setInterval(() => {
+    refresh();
+  }, 5000);
 });
 </script>
 

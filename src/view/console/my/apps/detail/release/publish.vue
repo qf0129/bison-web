@@ -8,16 +8,16 @@
       <!-- <t-drawer v-model:visible="visible" header="Publish App" size="large" confirmBtn="Submit" @confirm="submitForm" @close="onClose" :destroyOnClose="true"> -->
       <t-form v-if="formData" ref="form" :data="formData" labelWidth="150px">
         <t-form-item name="EnvId" label="Env">
-          <my-env-selector v-model="formData.env_id" />
+          <my-env-selector v-model="formData.env_id" style="width: 50%" />
         </t-form-item>
         <t-form-item name="ImageId" label="Image">
-          <my-image-selector v-if="appId || release?.app_id" v-model="formData.image_id" :appId="appId || release?.app_id || ''" />
+          <my-image-selector v-if="appId || release?.app_id" v-model="formData.image_id" :appId="appId || release?.app_id || ''" style="width: 50%" />
         </t-form-item>
         <t-form-item name="DomainId" label="DomainSuffix">
-          <my-domain-selector v-model="formData.domain_id" :envId="formData.env_id" />
+          <my-domain-selector v-model="formData.domain_id" :envId="formData.env_id" style="width: 50%" />
         </t-form-item>
         <t-form-item name="ReplicaCount" label="ReplicaCount">
-          <t-input-number v-model="formData.replica_count" min="1" />
+          <t-input-number v-model="formData.replica_count" min="1" style="width: 50%" />
         </t-form-item>
         <t-form-item name="ConfigMode" label="ConfigMode">
           <t-space>
