@@ -3,7 +3,7 @@
   <div v-else>
     <AppHeader :app="app" />
     <m-container :padded="false">
-      <t-row :gutter="[10, 10]">
+      <t-row :gutter="[10, 10]" style="padding-bottom: 60px">
         <t-col :span="4">
           <Info :app="app" />
         </t-col>

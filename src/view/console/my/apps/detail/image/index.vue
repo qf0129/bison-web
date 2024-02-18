@@ -61,7 +61,7 @@ onMounted(() => {
   requestData();
   setInterval(() => {
     requestData();
-  }, 3000);
+  }, 10000);
 });
 </script>
 
