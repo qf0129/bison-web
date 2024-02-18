@@ -1,7 +1,7 @@
 <template>
   <t-button theme="primary" @click="show">BuildImage</t-button>
   <t-dialog v-model:visible="visible" header="Build" width="40%" :on-close="close" :on-confirm="onConfirmAnother">
-    <t-form labelAlign="top">
+    <t-form>
       <t-form-item label="Branch">
         <t-input v-model="form.branch" plplaceholder="Branch" />
       </t-form-item>

@@ -20,17 +20,7 @@
       </template>
       <t-row>
         <t-col :span="6">
-          <m-info
-            :infos="[
-              { key: 'Name', val: release?.name },
-              { key: 'Creator', val: release?.creator?.username },
-              { key: 'Ctime', val: release?.ctime },
-              { key: 'Config', val: release?.config_mode == 'json' ? release.config_mode + '(' + release.config_path + ')' : release?.config_mode },
-              { key: 'Domain', val: release?.name + '.' + release?.domain?.content, link: 'http://' + release?.name + '.' + release?.domain?.content },
-              // { key: 'Status', val: release?.status },
-              // { key: 'ErrMsg', val: release?.err_msg },
-            ]"
-          >
+          <m-info>
             <m-info-item label="Name">{{ release?.name }}</m-info-item>
             <m-info-item label="Creator">{{ release?.creator?.username || "-" }}</m-info-item>
             <m-info-item label="Ctime">{{ release?.ctime }}</m-info-item>
@@ -40,8 +30,8 @@
               <template v-else>-</template>
             </m-info-item>
             <m-info-item label="Domain">
-              <t-link :href="'http://' + release?.name + '.' + release?.domain?.content" target="_blank" theme="primary">
-                {{ release?.name + "." + release?.domain?.content }}
+              <t-link :href="'http://' + release?.domain_prefix + '.' + release?.domain?.content" target="_blank" theme="primary">
+                {{ release?.domain_prefix + "." + release?.domain?.content }}
               </t-link>
             </m-info-item>
           </m-info>
@@ -51,7 +41,7 @@
             :infos="[
               { key: 'Env', val: release?.env?.title + '(' + release?.env?.name + ')' },
               { key: 'AppName', val: app?.name },
-              { key: 'AppRepo', val: app?.git_url },
+              { key: 'ImageName', val: release?.image?.name },
               { key: 'ImageTag', val: release?.image?.tag },
               { key: 'ImageDesc', val: release?.image?.desc },
             ]"

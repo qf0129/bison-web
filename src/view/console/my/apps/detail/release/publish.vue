@@ -8,23 +8,36 @@
       <!-- <t-drawer v-model:visible="visible" header="Publish App" size="large" confirmBtn="Submit" @confirm="submitForm" @close="onClose" :destroyOnClose="true"> -->
       <t-form v-if="formData" ref="form" :data="formData" labelWidth="150px">
         <t-form-item name="EnvId" label="Env">
-          <my-env-selector v-model="formData.env_id" style="width: 50%" />
+          <t-radio-group v-model="formData.env_id" variant="primary-filled" @change="changeEnv">
+            <t-radio-button v-for="env in envs" :value="env.id">{{ env.title || env.name }}</t-radio-button>
+          </t-radio-group>
         </t-form-item>
         <t-form-item name="ImageId" label="Image">
-          <my-image-selector v-if="appId || release?.app_id" v-model="formData.image_id" :appId="appId || release?.app_id || ''" style="width: 50%" />
+          <t-select
+            v-model="formData.image_id"
+            filterable
+            placeholder="Select image"
+            :on-search="requestImageList"
+            :loading="loadingImages"
+            :options="images"
+            style="width: 70%"
+          />
         </t-form-item>
-        <t-form-item name="DomainId" label="DomainSuffix">
-          <my-domain-selector v-model="formData.domain_id" :envId="formData.env_id" style="width: 50%" />
+        <t-form-item name="DomainId" label="Domain">
+          <t-input-group style="width: 100%">
+            <t-input v-model="formData.domain_prefix" style="width: 40%" clearable placeholder="Default is release id" />
+            <t-select v-model="formData.domain_id" filterable placeholder="Select domain" :loading="loadingDomains" :options="domains" style="width: 30%" />
+          </t-input-group>
         </t-form-item>
         <t-form-item name="ReplicaCount" label="ReplicaCount">
-          <t-input-number v-model="formData.replica_count" min="1" style="width: 50%" />
+          <t-input-number v-model="formData.replica_count" min="1" />
         </t-form-item>
         <t-form-item name="ConfigMode" label="ConfigMode">
           <t-space>
-            <t-radio-group v-model="formData.config_mode">
+            <t-radio-group v-model="formData.config_mode" variant="default-filled">
               <t-radio-button value="" label="None" />
-              <t-radio-button value="env" label="Env" />
-              <t-radio-button value="json" label="JSON" />
+              <t-radio-button value="env" label="Env Variables" />
+              <t-radio-button value="json" label="JSON File" />
             </t-radio-group>
             <t-input v-if="formData.config_mode === 'json'" v-model="formData.config_path" />
           </t-space>
@@ -133,10 +146,9 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import { ApplyRelease } from "@/api/my";
-import { GetMyAppReleases } from "@/api/my";
+import { ApplyRelease, GetMyEnvs, GetMyAppReleases, GetEnvDomains, GetMyAppImages } from "@/api/my";
 import { PlusIcon, DeleteIcon } from "tdesign-icons-vue-next";
-import { PublishObject, Release } from "@/type/types";
+import { Env, PublishObject, Release } from "@/type/types";
 
 const props = defineProps({
   appId: String || "",
@@ -158,6 +170,81 @@ const show = () => {
       }
     }
   }
+  requestImageList("");
+  requestEnvList();
+};
+
+const envs = ref<Array<Env>>();
+const loadingEnvs = ref(false);
+const requestEnvList = () => {
+  loadingEnvs.value = true;
+  GetMyEnvs({})
+    .then((resp) => {
+      if (resp.code === 0) {
+        if (resp.data.list.length > 0) {
+          envs.value = resp.data.list;
+          if (!props.releaseId && formData.value?.env_id == "") {
+            formData.value.env_id = resp.data.list[0].id;
+          }
+          requestDomainList();
+        }
+      }
+    })
+    .finally(() => {
+      loadingEnvs.value = false;
+    });
+};
+
+const changeEnv = () => {
+  requestDomainList();
+};
+
+const domains = ref<Array<any>>([]);
+const loadingDomains = ref(false);
+const requestDomainList = () => {
+  if (!formData.value?.env_id) {
+    return;
+  }
+  loadingDomains.value = true;
+  GetEnvDomains(formData.value.env_id, {})
+    .then((resp) => {
+      domains.value = [];
+      if (resp.code === 0) {
+        resp.data.list.forEach((item: any) => {
+          domains.value.push({ value: item.id, label: "." + item.content });
+        });
+        if (!props.releaseId && formData.value?.domain_id == "") {
+          formData.value.domain_id = domains.value[0].value;
+        }
+      }
+    })
+    .finally(() => {
+      loadingDomains.value = false;
+    });
+};
+
+const images = ref<Array<any>>([]);
+const loadingImages = ref(false);
+const requestImageList = (search: string) => {
+  if (!props.appId) {
+    return;
+  }
+  loadingImages.value = true;
+  GetMyAppImages(props.appId, { "tag:ct": search, status: "success", "ctime:ob": "desc" })
+    .then((resp) => {
+      images.value = [];
+      if (resp.code === 0) {
+        resp.data.list.forEach((item: any) => {
+          images.value.push({ value: item.id, label: item.tag + "(" + item.repo_branch + "): " + item.desc });
+        });
+        if (!props.releaseId && formData.value?.image_id == "") {
+          formData.value.image_id = images.value[0].value;
+        }
+      }
+    })
+    .finally(() => {
+      loadingImages.value = false;
+    });
 };
 
 const release = ref<Release>();
@@ -168,6 +255,7 @@ function requestRelease(releaseId: string) {
       if (formData.value && release.value) {
         formData.value.release_id = release.value.id;
         formData.value.env_id = release.value.env_id;
+        formData.value.domain_prefix = release.value.domain_prefix;
         formData.value.domain_id = release.value.domain_id;
         formData.value.image_id = release.value.image_id;
         formData.value.replica_count = release.value.replica_count;
@@ -260,6 +348,7 @@ const resetForm = () => {
   formData.value = {
     env_id: "",
     domain_id: "",
+    domain_prefix: "",
     image_id: "",
     replica_count: 1,
     config_mode: "",
