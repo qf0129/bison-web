@@ -27,6 +27,7 @@ declare module "vue" {
     RouterLink: typeof import("vue-router")["RouterLink"];
     RouterView: typeof import("vue-router")["RouterView"];
     TAside: typeof import("tdesign-vue-next")["Aside"];
+    TAutoComplete: typeof import("tdesign-vue-next")["AutoComplete"];
     TBreadcrumb: typeof import("tdesign-vue-next")["Breadcrumb"];
     TBreadcrumbItem: typeof import("tdesign-vue-next")["BreadcrumbItem"];
     TButton: typeof import("tdesign-vue-next")["Button"];
@@ -42,6 +43,7 @@ declare module "vue" {
     Team: typeof import("./src/components/m-nav/team.vue")["default"];
     TForm: typeof import("tdesign-vue-next")["Form"];
     TFormItem: typeof import("tdesign-vue-next")["FormItem"];
+    TIcon: typeof import("tdesign-vue-next")["Icon"];
     TInput: typeof import("tdesign-vue-next")["Input"];
     TInputGroup: typeof import("tdesign-vue-next")["InputGroup"];
     TInputNumber: typeof import("tdesign-vue-next")["InputNumber"];
