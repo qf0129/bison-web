@@ -1,12 +1,15 @@
 <template>
   <t-button theme="primary" @click="show">BuildImage</t-button>
   <t-dialog v-model:visible="visible" header="Build" width="40%" :on-close="close" :on-confirm="onConfirmAnother">
-    <t-form>
-      <t-form-item label="Branch">
-        <t-input v-model="form.branch" plplaceholder="Branch" />
+    <t-form :rules="rules" :data="form">
+      <t-form-item name="branch" label="Branch">
+        <t-input v-model="form.branch" plplaceholder="Branch" clearable />
       </t-form-item>
-      <t-form-item label="Desc">
-        <t-textarea v-model="form.desc" placeholder="Description of this revision" />
+      <t-form-item name="desc" label="Desc">
+        <t-textarea v-model="form.desc" placeholder="Description of this revision" clearable />
+      </t-form-item>
+      <t-form-item name="ports" label="Ports">
+        <t-input v-model="form.ports" plplaceholder="Expose Ports" clearable />
       </t-form-item>
     </t-form>
   </t-dialog>
@@ -25,7 +28,14 @@ const emits = defineEmits(["onSubmit"]);
 const form = ref({
   branch: "",
   desc: "",
+  ports: "8080",
 });
+
+const rules = {
+  branch: [{ required: true, message: "Please input branch", type: "error", trigger: "blur" }],
+  desc: [{ required: true, message: "Please input desc", type: "error", trigger: "blur" }],
+  ports: [{ pattern: /[0-9,]/, message: "Please input the exposed port numbers, separated by ','", type: "error", trigger: "blur" }],
+};
 
 const visible = ref(false);
 

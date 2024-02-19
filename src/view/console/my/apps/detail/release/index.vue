@@ -10,6 +10,11 @@
       <template #operation="{ row }">
         <t-button theme="primary" variant="text" @click="clickRelease(row)">View</t-button>
       </template>
+      <template #custom_domain="{ row }">
+        <t-tooltip :content="row.domain_prefix + '.' + row.domain.content">
+          <t-link :href="'http://' + row.domain_prefix + '.' + row.domain.content" theme="primary" target="_blank"><Link1Icon /></t-link>
+        </t-tooltip>
+      </template>
       <template #custom_status="{ row }">
         <t-space>
           <t-tag
@@ -34,7 +39,7 @@ import { Release, DeploymentStatus } from "@/type/types";
 import { useRoute } from "vue-router";
 import { ref, onMounted } from "vue";
 import { GetMyAppReleases, GetMyAppReleasesStatus } from "@/api/my";
-import { ErrorCircleIcon } from "tdesign-icons-vue-next";
+import { ErrorCircleIcon, Link1Icon } from "tdesign-icons-vue-next";
 import PublishBtn from "./publish.vue";
 import router from "@/router";
 
@@ -50,6 +55,7 @@ const columns = ref([
   { colKey: "ctime", title: "Ctime", width: 300 },
   { colKey: "creator.username", title: "Creator" },
   { colKey: "custom_status", title: "Status" },
+  { colKey: "custom_domain", title: "Domain" },
   { colKey: "operation", title: "Operation" },
 ]);
 
@@ -57,7 +63,7 @@ const releases = ref<Array<Release>>([]);
 const loadingList = ref(false);
 const requestData = () => {
   loadingList.value = true;
-  var params: any = { "ctime:ob": "desc", preload: "app,creator,image,env", page_size: 100 };
+  var params: any = { "ctime:ob": "desc", preload: "app,creator,image,env,domain", page_size: 100 };
   if (selectedEnvId.value) {
     params.env_id = selectedEnvId.value;
   }

@@ -5,7 +5,6 @@
       <template v-else>PublishApp</template>
     </t-button>
     <t-dialog v-model:visible="visible" header="Publish App" width="60%" style="max-height: 500px" :on-close="onClose" :on-confirm="submitForm">
-      <!-- <t-drawer v-model:visible="visible" header="Publish App" size="large" confirmBtn="Submit" @confirm="submitForm" @close="onClose" :destroyOnClose="true"> -->
       <t-form v-if="formData" ref="form" :data="formData" labelWidth="150px">
         <t-form-item name="EnvId" label="Env">
           <t-radio-group v-model="formData.env_id" variant="primary-filled" @change="changeEnv">
@@ -17,9 +16,10 @@
             v-model="formData.image_id"
             filterable
             placeholder="Select image"
-            :on-search="requestImageList"
-            :loading="loadingImages"
             :options="images"
+            :loading="loadingImages"
+            :on-search="requestImageList"
+            :on-change="changeImageId"
             style="width: 70%"
           />
         </t-form-item>
@@ -137,9 +137,6 @@
           </t-form-item>
         </t-form>
       </m-collapse-panel>
-      <!-- <t-row style="margin-top: 50px;text-align: center;">
-                <t-button theme="primary" type="submit" @click="submitForm">Submit</t-button>
-            </t-row> -->
     </t-dialog>
   </div>
 </template>
@@ -235,16 +232,43 @@ const requestImageList = (search: string) => {
       images.value = [];
       if (resp.code === 0) {
         resp.data.list.forEach((item: any) => {
-          images.value.push({ value: item.id, label: item.tag + "(" + item.repo_branch + "): " + item.desc });
+          images.value.push({ value: item.id, label: item.tag + "(" + item.repo_branch + "): " + item.desc, image: item });
         });
         if (!props.releaseId && formData.value?.image_id == "") {
           formData.value.image_id = images.value[0].value;
+          changeImageId(formData.value.image_id);
         }
       }
     })
     .finally(() => {
       loadingImages.value = false;
     });
+};
+
+const changeImageId = (imgId: string) => {
+  if (props.releaseId) {
+    return;
+  }
+  images.value.filter((item) => {
+    if (item.value === imgId) {
+      var containerPorts: any[] = [];
+      var servicePorts: any[] = [];
+      var ports = item.image.ports.split(",");
+      if (ports.length == 1) {
+        containerPorts.push({ protocol: "TCP", containerPort: Number(ports[0]) });
+        servicePorts.push({ protocol: "TCP", port: 80, targetPort: Number(ports[0]) });
+      } else if (ports.length > 1) {
+        ports.forEach((p: string) => {
+          containerPorts.push({ protocol: "TCP", containerPort: Number(p) });
+          servicePorts.push({ protocol: "TCP", port: Number(p), targetPort: Number(p) });
+        });
+      }
+      if (formData.value != undefined) {
+        formData.value.container.ports = containerPorts;
+        formData.value.service_spec.ports = servicePorts;
+      }
+    }
+  });
 };
 
 const release = ref<Release>();
@@ -316,7 +340,7 @@ const delPort = (index: number) => {
 
 const addServicePort = () => {
   if (formData.value) {
-    formData.value.service_spec.ports.push({ protocol: "tcp", port: 80, targetPort: 8080 });
+    formData.value.service_spec.ports.push({ protocol: "tcp", port: 80, targetPort: 80 });
   }
 };
 
