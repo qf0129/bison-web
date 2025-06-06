@@ -31,7 +31,7 @@ const MenuItem = styled.div`
   }
   &.active {
     background-color: #ddd;
-    border-bottom: 1px solid var(--main-color);
+    border-bottom: 4px solid var(--main-color);
   }
 `;
 
